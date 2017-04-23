@@ -45,10 +45,10 @@ Command to load input files :
 command to group B and calculate sum of the expenses
 1.grpB = group B by id ;
 2.C = foreach grpB generate group,SUM(B.expense) as exp;
-3 . C = order C by exp desc ;
+
 
 Command to use joins and display the output :
 1.joinAC = join A by id,C by group ;
-2.r1= order joinAC by A::name,C::exp desc ;
+2.r1= order joinAC by C::exp desc ,A::name ;
 3.result = Limit r1 3 ;
 
