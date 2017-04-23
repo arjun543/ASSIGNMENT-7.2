@@ -34,3 +34,20 @@ to limit to 3 rows : D = limit C 3 ;
 command to display id ,name : E = foreach D generate id,name ;
 to store out put into a file : store E into 'pigout1' using PigStorage(',') ;
 
+
+(c)
+
+Solution :
+Command to load input files :
+1.A = Load 'employee_details.txt' using PigStorage(',') as (id:int,name:chararray,sal:long,rating:int);
+2. B = load 'employee_expenses.txt' as (id:int,expense:long);
+
+command to group B and calculate sum of the expenses
+1.grpB = group B by id ;
+2.C = foreach grpB generate group,SUM(B.expense) as exp;
+
+Command to use joins and display the output :
+1.joinAC = join A by id,C by group ;
+2.r1= order joinAC by A::name,C::exp desc ;
+3.result = Limit r1 3 ;
+
