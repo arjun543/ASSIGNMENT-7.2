@@ -15,7 +15,7 @@ to limit to 5 rows : C = limit B 5 ;
 command to display id ,name : D = foreach C generate id,name ;
 to store out put into a file : store D into 'pigout1' using PigStorage(',') ;
 
-
+**************************************************************************
 (b) Top 3 employees (employee id and employee name) with highest salary, whose employee id
 
 is an odd number.
@@ -33,7 +33,7 @@ to fetch id which are odd : C = Filter B by id%2>0 ;
 to limit to 3 rows : D = limit C 3 ;
 command to display id ,name : E = foreach D generate id,name ;
 to store out put into a file : store E into 'pigout1' using PigStorage(',') ;
-
+**************************************************************************
 
 (c)
 
@@ -51,4 +51,52 @@ Command to use joins and display the output :
 1.joinAC = join A by id,C by group ;
 2.r1= order joinAC by C::exp desc ,A::name ;
 3.result = Limit r1 3 ;
+4.result = foreach result generate A::id,A::name;//displays the result
+
+**************************************************************************
+(D)should get preference)
+(d) List of employees (employee id and employee name) having entries in employee_expenses
+file.
+
+
+solution:
+
+Solution :
+Command to load input files :
+1.A = Load 'employee_details.txt' using PigStorage(',') as (id:int,name:chararray,sal:long,rating:int);
+2. B = load 'employee_expenses.txt' as (id:int,expense:long);
+
+To group expenses file with id 
+1.grpB = group B by id ;
+
+Applying left join 
+leftJoin = join A by id left ,grpB by group;
+to filter the employees who do not have entries in expenses 
+result1 = filter leftJoin by grpB::group > 0 ;
+result = foreach result1 generate A::id,A::name;
+**************************************************************************
+
+(E)
+(e) List of employees (employee id and employee name) having no entry in employee_expenses
+file.
+
+
+
+Solution 
+
+
+
+Solution :
+Command to load input files :
+1.A = Load 'employee_details.txt' using PigStorage(',') as (id:int,name:chararray,sal:long,rating:int);
+2. B = load 'employee_expenses.txt' as (id:int,expense:long);
+
+To group expenses file with id 
+1.grpB = group B by id ;
+
+Applying left join 
+leftJoin = join A by id left ,grpB by group;
+to filter the employees who do not have entries in expenses 
+result1 = filter leftJoin by grpB::group is null ;
+result = foreach result1 generate A::id,A::name;
 
